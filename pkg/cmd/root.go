@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"context"
 	"flag"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/makocchi-git/kubectl-free/pkg/table"
 	"github.com/makocchi-git/kubectl-free/pkg/util"
@@ -14,8 +16,8 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	clientv1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"k8s.io/client-go/rest"
-	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
-	"k8s.io/kubernetes/pkg/kubectl/util/templates"
+	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/templates"
 	metrics "k8s.io/metrics/pkg/client/clientset/versioned"
 	metricsv1beta1 "k8s.io/metrics/pkg/client/clientset/versioned/typed/metrics/v1beta1"
 
@@ -247,23 +249,25 @@ func (o *FreeOptions) Validate() error {
 
 // Run printing disk usage of images
 func (o *FreeOptions) Run(args []string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
 
 	// get nodes
-	nodes, err := util.GetNodes(o.nodeClient, args, o.labelSelector)
+	nodes, err := util.GetNodes(ctx, o.nodeClient, args, o.labelSelector)
 	if err != nil {
 		return nil
 	}
 
 	// list pods and return
 	if o.list {
-		if err := o.showPodsOnNode(nodes); err != nil {
+		if err := o.showPodsOnNode(ctx, nodes); err != nil {
 			return err
 		}
 		return nil
 	}
 
 	// print cpu/mem/pod resource usage
-	if err := o.showFree(nodes); err != nil {
+	if err := o.showFree(ctx, nodes); err != nil {
 		return err
 	}
 
@@ -494,7 +498,9 @@ func (o *FreeOptions) toMilliUnitOrDash(i int64) string {
 }
 
 // toColorPercent returns colored strings
-//        percentage < warn : Green
+//
+//	percentage < warn : Green
+//
 // warn < percentage < crit : Yellow
 // crit < percentage        : Red
 func (o *FreeOptions) toColorPercent(i int64) string {

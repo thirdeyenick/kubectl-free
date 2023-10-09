@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 
@@ -11,7 +12,7 @@ import (
 )
 
 // showFree prints requested and allocatable resources
-func (o *FreeOptions) showFree(nodes []v1.Node) error {
+func (o *FreeOptions) showFree(ctx context.Context, nodes []v1.Node) error {
 
 	// set table header
 	if !o.noHeaders {
@@ -40,7 +41,7 @@ func (o *FreeOptions) showFree(nodes []v1.Node) error {
 		util.SetNodeStatusColor(&nodeStatus, o.nocolor)
 
 		// get pods on node
-		pods, perr := util.GetPods(o.podClient, nodeName)
+		pods, perr := util.GetPods(ctx, o.podClient, nodeName)
 		if perr != nil {
 			return perr
 		}
@@ -62,7 +63,7 @@ func (o *FreeOptions) showFree(nodes []v1.Node) error {
 
 		// get metrics
 		if !o.noMetrics && o.metricsNodeClient != nil {
-			nodeMetrics, err := o.metricsNodeClient.Get(nodeName, metav1.GetOptions{})
+			nodeMetrics, err := o.metricsNodeClient.Get(ctx, nodeName, metav1.GetOptions{})
 			if err == nil {
 				cpuMetricsUsed = nodeMetrics.Usage.Cpu().MilliValue()
 				memMetricsUsed = nodeMetrics.Usage.Memory().Value()

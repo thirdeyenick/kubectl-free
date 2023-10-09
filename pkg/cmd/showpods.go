@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"time"
 
 	"github.com/makocchi-git/kubectl-free/pkg/util"
@@ -11,7 +12,7 @@ import (
 	metricsapiv1beta1 "k8s.io/metrics/pkg/apis/metrics/v1beta1"
 )
 
-func (o *FreeOptions) showPodsOnNode(nodes []v1.Node) error {
+func (o *FreeOptions) showPodsOnNode(ctx context.Context, nodes []v1.Node) error {
 
 	// set table header
 	if !o.noHeaders {
@@ -21,7 +22,7 @@ func (o *FreeOptions) showPodsOnNode(nodes []v1.Node) error {
 	// get pod metrics
 	var podMetrics *metricsapiv1beta1.PodMetricsList
 	if !o.noMetrics && o.metricsPodClient != nil {
-		podMetrics, _ = o.metricsPodClient.List(metav1.ListOptions{})
+		podMetrics, _ = o.metricsPodClient.List(ctx, metav1.ListOptions{})
 	}
 
 	// node loop
@@ -31,7 +32,7 @@ func (o *FreeOptions) showPodsOnNode(nodes []v1.Node) error {
 		nodeName := node.ObjectMeta.Name
 
 		// get pods on node
-		pods, perr := util.GetPods(o.podClient, nodeName)
+		pods, perr := util.GetPods(ctx, o.podClient, nodeName)
 		if perr != nil {
 			return perr
 		}

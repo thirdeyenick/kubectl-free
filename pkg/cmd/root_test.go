@@ -19,8 +19,8 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	fake "k8s.io/client-go/kubernetes/fake"
 	core "k8s.io/client-go/testing"
-	cmdtesting "k8s.io/kubernetes/pkg/kubectl/cmd/testing"
-	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
+	cmdtesting "k8s.io/kubectl/pkg/cmd/testing"
+	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	metricsapiv1beta1 "k8s.io/metrics/pkg/apis/metrics/v1beta1"
 	fakemetrics "k8s.io/metrics/pkg/client/clientset/versioned/fake"
 )

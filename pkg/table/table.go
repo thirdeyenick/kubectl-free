@@ -3,10 +3,11 @@ package table
 import (
 	"fmt"
 	"io"
+	"os"
+
+	"text/tabwriter"
 
 	"github.com/makocchi-git/kubectl-free/pkg/util"
-
-	"k8s.io/kubernetes/pkg/printers"
 )
 
 // OutputTable is struct of tables for outputs
@@ -27,20 +28,20 @@ func NewOutputTable(o io.Writer) *OutputTable {
 func (t *OutputTable) Print() {
 
 	// get printer
-	printer := printers.GetNewTabWriter(t.Output)
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.Debug)
 
 	// write header
 	if len(t.Header) > 0 {
-		fmt.Fprintln(printer, util.JoinTab(t.Header))
+		fmt.Fprintln(w, util.JoinTab(t.Header))
 	}
 
 	// write rows
 	for _, row := range t.Rows {
-		fmt.Fprintln(printer, row)
+		fmt.Fprintln(w, row)
 	}
 
 	// finish
-	printer.Flush()
+	w.Flush()
 }
 
 // AddRow adds row to table

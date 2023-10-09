@@ -1,6 +1,7 @@
 package util
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -67,7 +68,9 @@ func JoinTab(s []string) string {
 }
 
 // SetPercentageColor returns colored string
-//        percentage < warn : Green
+//
+//	percentage < warn : Green
+//
 // warn < percentage < crit : Yellow
 // crit < percentage        : Red
 func SetPercentageColor(s *string, p, warn, crit int64) {
@@ -169,19 +172,19 @@ func GetPodStatus(status string, nocolor, emoji bool) string {
 }
 
 // GetNodes returns node objects
-func GetNodes(c clientv1.NodeInterface, args []string, label string) ([]v1.Node, error) {
+func GetNodes(ctx context.Context, c clientv1.NodeInterface, args []string, label string) ([]v1.Node, error) {
 	nodes := []v1.Node{}
 
 	if len(args) > 0 {
 		for _, a := range args {
-			n, nerr := c.Get(a, metav1.GetOptions{})
+			n, nerr := c.Get(ctx, a, metav1.GetOptions{})
 			if nerr != nil {
 				return nodes, fmt.Errorf("failed to get node: %v", nerr)
 			}
 			nodes = append(nodes, *n)
 		}
 	} else {
-		na, naerr := c.List(metav1.ListOptions{LabelSelector: label})
+		na, naerr := c.List(ctx, metav1.ListOptions{LabelSelector: label})
 		if naerr != nil {
 			return nodes, fmt.Errorf("failed to list nodes: %v", naerr)
 		}
@@ -214,9 +217,9 @@ func GetNodeStatus(node v1.Node, emoji bool) (string, error) {
 }
 
 // GetPods returns node objects
-func GetPods(c clientv1.PodInterface, nodeName string) (*v1.PodList, error) {
+func GetPods(ctx context.Context, c clientv1.PodInterface, nodeName string) (*v1.PodList, error) {
 
-	pods, err := c.List(metav1.ListOptions{FieldSelector: "spec.nodeName=" + nodeName})
+	pods, err := c.List(ctx, metav1.ListOptions{FieldSelector: "spec.nodeName=" + nodeName})
 	if err != nil {
 		return pods, fmt.Errorf("failed to get pods: %s", err)
 	}
