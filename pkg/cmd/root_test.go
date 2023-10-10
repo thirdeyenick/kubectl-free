@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/makocchi-git/kubectl-free/pkg/table"
-	"github.com/makocchi-git/kubectl-free/pkg/util"
+	"github.com/thirdeyenick/kubectl-free/pkg/table"
+	"github.com/thirdeyenick/kubectl-free/pkg/util"
 
 	color "github.com/gookit/color"
 	"github.com/spf13/cobra"

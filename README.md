@@ -1,11 +1,7 @@
 # kubectl free
 
-[![Build Status](https://travis-ci.org/makocchi-git/kubectl-free.svg?branch=master)](https://travis-ci.org/makocchi-git/kubectl-free)
-[![Maintainability](https://api.codeclimate.com/v1/badges/b92591d00becc95b11ca/maintainability)](https://codeclimate.com/github/makocchi-git/kubectl-free/maintainability)
-[![Go Report Card](https://goreportcard.com/badge/github.com/makocchi-git/kubectl-free)](https://goreportcard.com/report/github.com/makocchi-git/kubectl-free)
-[![codecov](https://codecov.io/gh/makocchi-git/kubectl-free/branch/master/graph/badge.svg)](https://codecov.io/gh/makocchi-git/kubectl-free)
-[![kubectl plugin](https://img.shields.io/badge/kubectl-plugin-blue.svg)](https://github.com/topics/kubectl-plugin)
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+This is a fork of https://github.com/makocchi-git/kubectl-free with just a few
+minor changes (like sorting pods of nodes by mem/cpu usage).
 
 Print pod resources/limits usage on Kubernetes node(s) like a linux "free" command.  
 
@@ -20,7 +16,7 @@ node3   Ready    222m      2030m     12900m    3600m       6%         56%       
 And list containers of pod on Kubernetes node(s).
 
 ```shell
-$ kubectl free --list node1 --all-namespaces
+$ kubectl free --list node1
 NODE NAME  NAMESPACE     POD NAME                               POD AGE   POD IP       POD STATUS   CONTAINER            CPU/use   CPU/req   CPU/lim   MEM/use   MEM/req   MEM/lim
 node1      default       nginx-7cdbd8cdc9-q2bbg                 3d22h     10.112.2.43  Running      nginx                2m        100m      2         27455K    134217K   1073741K
 node1      kube-system   coredns-69dc677c56-chfcm               9d        10.112.3.2   Running      coredns              3m        100m      -         17420K    73400K    178257K
@@ -32,7 +28,7 @@ node1      kube-system   kube-state-metrics-69bcc79474-wvmmk    9d        10.112
 
 ## Install
 
-`kubectl-free` binary is available at [release page](https://github.com/makocchi-git/kubectl-free/releases) or you can make binary.
+`kubectl-free` binary is available at [release page](https://github.com/thirdeyenick/kubectl-free/releases) or you can make binary.
 
 ```shell
 $ make
@@ -47,42 +43,33 @@ $ kubectl free
 ## Usage
 
 ```shell
-# Show pod resource usage of Kubernetes nodes (default namespace is "default").
+# Show pod resource usage of Kubernetes nodes (include all namespaces by
+# default). It also includes containers with no resources/limits.
 kubectl free
-
-# Show pod resource usage of Kubernetes nodes (all namespaces).
-kubectl free --all-namespaces
 
 # Show pod resource usage of Kubernetes nodes with number of pods and containers.
 kubectl free --pod
 
-# Using label selector.
+# Using label selector for nodes to include.
 kubectl free -l key=value
 
 # Print raw(bytes) usage.
 kubectl free --bytes --without-unit
 
-# Using binary prefix unit (GiB, MiB, etc)
+# Using binary prefix unit (GiB, MiB, etc). By default it uses MiB.
 kubectl free -g -B
 
 # List resources of containers in pods on nodes.
 kubectl free --list
 
+# List resources of containers in pods on specific nodes.
+kubectl free --list <node names...>
+
 # List resources of containers in pods on nodes with image information.
 kubectl free --list --list-image
-
-# Print container even if that has no resources/limits.
-kubectl free --list --list-all
-
-# Do you like emoji? 😃
-kubectl free --emoji
-kubectl free --list --emoji
 ```
 
 ## Notice
-
-~~This plugin shows just sum of requested(limited) resources, **not a real usage**.  
-I recommend to use `kubectl free` with `kubectl top`.~~
 
 kubectl free v0.2.0 supports printing real usages from metrics server in a target cluster.  
 You can disable printing usage with `--no-metrics` option.

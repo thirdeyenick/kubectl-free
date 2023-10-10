@@ -1,15 +1,6 @@
-module github.com/makocchi-git/kubectl-free
+module github.com/thirdeyenick/kubectl-free
 
 go 1.20
-
-//replace (
-//	github.com/Sirupsen/logrus => github.com/sirupsen/logrus v1.4.2
-//	github.com/docker/docker => github.com/moby/moby v0.7.3-0.20190607191414-238f8eaa31aa
-//	github.com/golangci/golangci-lint => github.com/golangci/golangci-lint v1.17.1
-//	github.com/russross/blackfriday => github.com/russross/blackfriday v1.5.2
-//	k8s.io/client-go => k8s.io/client-go v0.0.0-20190531132438-d58e65e5f4b1
-//	k8s.io/kubernetes => k8s.io/kubernetes v1.14.2
-//)
 
 require (
 	github.com/gookit/color v1.5.4

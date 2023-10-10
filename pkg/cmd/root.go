@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/makocchi-git/kubectl-free/pkg/table"
-	"github.com/makocchi-git/kubectl-free/pkg/util"
+	"github.com/thirdeyenick/kubectl-free/pkg/table"
+	"github.com/thirdeyenick/kubectl-free/pkg/util"
 
 	"github.com/spf13/cobra"
 	v1 "k8s.io/api/core/v1"

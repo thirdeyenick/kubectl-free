@@ -7,7 +7,7 @@ import (
 
 	"text/tabwriter"
 
-	"github.com/makocchi-git/kubectl-free/pkg/util"
+	"github.com/thirdeyenick/kubectl-free/pkg/util"
 )
 
 // OutputTable is struct of tables for outputs
@@ -28,7 +28,7 @@ func NewOutputTable(o io.Writer) *OutputTable {
 func (t *OutputTable) Print() {
 
 	// get printer
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.Debug)
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
 
 	// write header
 	if len(t.Header) > 0 {

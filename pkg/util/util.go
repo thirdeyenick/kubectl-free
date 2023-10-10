@@ -12,7 +12,7 @@ import (
 	clientv1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	metricsapiv1beta1 "k8s.io/metrics/pkg/apis/metrics/v1beta1"
 
-	"github.com/makocchi-git/kubectl-free/pkg/constants"
+	"github.com/thirdeyenick/kubectl-free/pkg/constants"
 )
 
 // GetSiUnit defines unit for usage (SI prefix)

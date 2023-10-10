@@ -7,7 +7,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/api/resource"
 
-	"github.com/makocchi-git/kubectl-free/pkg/constants"
+	"github.com/thirdeyenick/kubectl-free/pkg/constants"
 
 	color "github.com/gookit/color"
 	v1 "k8s.io/api/core/v1"

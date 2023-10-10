@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/makocchi-git/kubectl-free/pkg/cmd"
+	"github.com/thirdeyenick/kubectl-free/pkg/cmd"
 	"github.com/spf13/pflag"
 
 	"k8s.io/cli-runtime/pkg/genericclioptions"

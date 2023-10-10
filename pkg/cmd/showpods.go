@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/makocchi-git/kubectl-free/pkg/util"
+	"github.com/thirdeyenick/kubectl-free/pkg/util"
 	"golang.org/x/exp/slices"
 
 	v1 "k8s.io/api/core/v1"

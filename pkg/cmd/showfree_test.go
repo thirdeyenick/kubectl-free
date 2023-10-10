@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/makocchi-git/kubectl-free/pkg/table"
+	"github.com/thirdeyenick/kubectl-free/pkg/table"
 
 	v1 "k8s.io/api/core/v1"
 	fake "k8s.io/client-go/kubernetes/fake"
