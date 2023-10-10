@@ -68,11 +68,9 @@ kubectl free --list <node names...>
 # List resources of containers in pods on nodes with image information.
 kubectl free --list --list-image
 ```
+## Tests
 
-## Notice
-
-kubectl free v0.2.0 supports printing real usages from metrics server in a target cluster.  
-You can disable printing usage with `--no-metrics` option.
+Tests are currently failing as more adoptions are needed.
 
 ## License
 
