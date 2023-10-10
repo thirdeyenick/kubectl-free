@@ -7,6 +7,7 @@ import (
 
 	color "github.com/gookit/color"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientv1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	metricsapiv1beta1 "k8s.io/metrics/pkg/apis/metrics/v1beta1"
@@ -228,17 +229,17 @@ func GetPods(ctx context.Context, c clientv1.PodInterface, nodeName string) (*v1
 }
 
 // GetContainerMetrics returns container metrics usage
-func GetContainerMetrics(metrics *metricsapiv1beta1.PodMetricsList, podName, containerName string) (cpu, mem int64) {
+func GetContainerMetrics(metrics *metricsapiv1beta1.PodMetricsList, podName, containerName string) (cpu *resource.Quantity, mem *resource.Quantity) {
 
-	var c int64
-	var m int64
+	var c *resource.Quantity
+	var m *resource.Quantity
 
 	for _, pod := range metrics.Items {
 		if pod.ObjectMeta.Name == podName {
 			for _, container := range pod.Containers {
 				if container.Name == containerName {
-					c = container.Usage.Cpu().MilliValue()
-					m = container.Usage.Memory().Value()
+					c = container.Usage.Cpu()
+					m = container.Usage.Memory()
 					break
 				}
 			}

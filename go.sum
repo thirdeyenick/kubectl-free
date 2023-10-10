@@ -155,6 +155,8 @@ golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACk
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
+golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e h1:+WEEuIdZHnUeJJmEUjyYC2gfUMj69yZXw17EnHg/otA=
+golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e/go.mod h1:Kr81I6Kryrl9sr8s2FK3vxD90NdsKWRuOIl2O4CvYbA=
 golang.org/x/lint v0.0.0-20181026193005-c67002cb31c3/go.mod h1:UVdnD1Gm6xHRNCYTkRU2/jEulfH38KcIWyp/GAMgvoE=
 golang.org/x/lint v0.0.0-20190227174305-5b3e6a55c961/go.mod h1:wehouNa3lNwaWXcvxsM5YxQ5yQlVC4a0KAMCusXpPoU=
 golang.org/x/lint v0.0.0-20190313153728-d0100b6bd8b3/go.mod h1:6SW0HCj/g11FgYtHlgUYUwCkIfeOF89ocIRzGO/8vkc=
@@ -264,8 +266,6 @@ k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9 h1:LyMgNKD2P8Wn1iAwQU5Ohx
 k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9/go.mod h1:wZK2AVp1uHCp4VamDVgBP2COHZjqD1T68Rf0CM3YjSM=
 k8s.io/kubectl v0.28.2 h1:fOWOtU6S0smdNjG1PB9WFbqEIMlkzU5ahyHkc7ESHgM=
 k8s.io/kubectl v0.28.2/go.mod h1:6EQWTPySF1fn7yKoQZHYf9TPwIl2AygHEcJoxFekr64=
-k8s.io/kubernetes v1.28.2 h1:GhcnYeNTukeaC0dD5BC+UWBvzQsFEpWj7XBVMQptfYc=
-k8s.io/kubernetes v1.28.2/go.mod h1:FmB1Mlp9ua0ezuwQCTGs/y6wj/fVisN2sVxhzjj0WDk=
 k8s.io/metrics v0.28.2 h1:Z/oMk5SmiT/Ji1SaWOPfW2l9W831BLO9/XxDq9iS3ak=
 k8s.io/metrics v0.28.2/go.mod h1:QTIIdjMrq+KodO+rmp6R9Pr1LZO8kTArNtkWoQXw0sw=
 k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 h1:qY1Ad8PODbnymg2pRbkyMT/ylpTrCM8P2RJ0yroCyIk=

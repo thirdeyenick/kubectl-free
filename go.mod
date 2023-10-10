@@ -15,12 +15,12 @@ require (
 	github.com/gookit/color v1.5.4
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
+	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
 	k8s.io/api v0.28.2
 	k8s.io/apimachinery v0.28.2
 	k8s.io/cli-runtime v0.28.2
 	k8s.io/client-go v0.28.2
 	k8s.io/kubectl v0.28.2
-	k8s.io/kubernetes v1.28.2
 	k8s.io/metrics v0.28.2
 )
 

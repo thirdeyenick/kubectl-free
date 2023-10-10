@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"flag"
+	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -24,6 +25,35 @@ import (
 	// Initialize all known client auth plugins.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
+
+var (
+	memorySortResource sortResource = "memory"
+	cpuSortResource    sortResource = "cpu"
+)
+
+type sortResource string
+
+// String implements the stringer interface
+func (s *sortResource) String() string {
+	if s == nil {
+		return "null"
+	}
+	return string(*s)
+}
+
+// Set sets the content of the sortResource
+func (s *sortResource) Set(v string) error {
+	if v != memorySortResource.String() && v != cpuSortResource.String() {
+		return fmt.Errorf("can only sort by %q and %q, not by given %q", memorySortResource.String(), cpuSortResource.String(), v)
+	}
+	*s = sortResource(v)
+	return nil
+}
+
+// Type returns the type
+func (s *sortResource) Type() string {
+	return "sortResource"
+}
 
 var (
 	// DfLong defines long description
@@ -79,6 +109,7 @@ type FreeOptions struct {
 	allNamespaces bool
 	noHeaders     bool
 	noMetrics     bool
+	compactView   bool
 
 	// unit options
 	bytes       bool
@@ -98,6 +129,9 @@ type FreeOptions struct {
 	listContainerImage bool
 	listAll            bool
 
+	// sort options
+	sortByResource sortResource
+
 	// k8s clients
 	nodeClient        clientv1.NodeInterface
 	podClient         clientv1.PodInterface
@@ -115,13 +149,13 @@ func NewFreeOptions(streams genericclioptions.IOStreams) *FreeOptions {
 		configFlags:        genericclioptions.NewConfigFlags(true),
 		bytes:              false,
 		kByte:              false,
-		mByte:              false,
+		mByte:              true,
 		gByte:              false,
 		withoutUnit:        false,
 		binPrefix:          false,
 		nocolor:            false,
-		warnThreshold:      25,
-		critThreshold:      50,
+		warnThreshold:      60,
+		critThreshold:      90,
 		IOStreams:          streams,
 		labelSelector:      "",
 		list:               false,
@@ -130,9 +164,11 @@ func NewFreeOptions(streams genericclioptions.IOStreams) *FreeOptions {
 		pod:                false,
 		emojiStatus:        false,
 		table:              table.NewOutputTable(os.Stdout),
-		allNamespaces:      false,
+		allNamespaces:      true,
 		noHeaders:          false,
 		noMetrics:          false,
+		sortByResource:     memorySortResource,
+		compactView:        true,
 	}
 }
 
@@ -160,6 +196,7 @@ func NewCmdFree(f cmdutil.Factory, streams genericclioptions.IOStreams, version,
 	cmd.Flags().BoolVarP(&o.gByte, "gigabytes", "g", o.gByte, `Use 1073741824-byte (1-Gbyte) blocks rather than the default.`)
 	cmd.Flags().BoolVarP(&o.binPrefix, "binary-prefix", "B", o.binPrefix, `Use 1024 for basic unit calculation instead of 1000. (print like "KiB")`)
 	cmd.Flags().BoolVarP(&o.withoutUnit, "without-unit", "", o.withoutUnit, `Do not print size with unit string.`)
+	cmd.Flags().Var(&o.sortByResource, "sort-by-resource", "Sort container list by CPU or memory usage.")
 	cmd.Flags().BoolVarP(&o.nocolor, "no-color", "", o.nocolor, `Print without ansi color.`)
 	cmd.Flags().BoolVarP(&o.pod, "pod", "p", o.pod, `Show pod count and limit.`)
 	cmd.Flags().BoolVarP(&o.list, "list", "", o.list, `Show container list on node.`)
@@ -169,6 +206,7 @@ func NewCmdFree(f cmdutil.Factory, streams genericclioptions.IOStreams, version,
 	cmd.Flags().BoolVarP(&o.allNamespaces, "all-namespaces", "", o.allNamespaces, `If present, list pod resources(limits) across all namespaces. Namespace in current context is ignored even if specified with --namespace.`)
 	cmd.Flags().BoolVarP(&o.noHeaders, "no-headers", "", o.noHeaders, `Do not print table headers.`)
 	cmd.Flags().BoolVarP(&o.noMetrics, "no-metrics", "", o.noMetrics, `Do not print node/pods/containers usage from metrics-server.`)
+	cmd.Flags().BoolVarP(&o.compactView, "compact-view", "", o.compactView, `Only print usage of pods/containers in a compact view.`)
 
 	// int64 options
 	cmd.Flags().Int64VarP(&o.warnThreshold, "warn-threshold", "", o.warnThreshold, `Threshold of warn(yellow) color for USED column.`)
@@ -393,11 +431,19 @@ func (o *FreeOptions) prepareListTableHeader() {
 		hNameSpace,
 	}
 
-	podHeader := []string{
-		hPod,
-		hPodAge,
-		hPodIP,
-		hPodStatus,
+	var podHeader []string
+	if !o.compactView {
+		podHeader = []string{
+			hPod,
+			hPodAge,
+			hPodIP,
+			hPodStatus,
+		}
+	} else {
+		podHeader = []string{
+			hPod,
+			hPodStatus,
+		}
 	}
 
 	containerHeader := []string{
@@ -419,9 +465,14 @@ func (o *FreeOptions) prepareListTableHeader() {
 	}
 
 	if !o.noMetrics {
-		// insert metrics columns
-		cpuHeader = append([]string{hCPUUse}, cpuHeader...)
-		memHeader = append([]string{hMEMUse}, memHeader...)
+		if o.compactView {
+			cpuHeader = []string{hCPUUse}
+			memHeader = []string{hMEMUse}
+		} else {
+			// insert metrics columns
+			cpuHeader = append([]string{hCPUUse}, cpuHeader...)
+			memHeader = append([]string{hMEMUse}, memHeader...)
+		}
 	}
 
 	// finally, join all columns

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"strings"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 )
 
 func TestShowFree(t *testing.T) {
+	ctx := context.Background()
 
 	var tests = []struct {
 		description string
@@ -94,7 +96,7 @@ func TestShowFree(t *testing.T) {
 				metricsNodeClient: fakeMetricsNodeClient.MetricsV1beta1().NodeMetricses(),
 			}
 
-			if err := o.showFree([]v1.Node{testNodes[0]}); err != nil {
+			if err := o.showFree(ctx, []v1.Node{testNodes[0]}); err != nil {
 				t.Errorf("unexpected error: %v", err)
 				return
 			}
@@ -130,7 +132,7 @@ func TestShowFree(t *testing.T) {
 			metricsNodeClient: fakeMetricsNodeClient.MetricsV1beta1().NodeMetricses(),
 		}
 
-		if err := o.showFree([]v1.Node{testNodes[0]}); err != nil {
+		if err := o.showFree(ctx, []v1.Node{testNodes[0]}); err != nil {
 			t.Errorf("unexpected error: %v", err)
 			return
 		}
